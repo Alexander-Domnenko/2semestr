@@ -63,8 +63,8 @@ while dest not in visited:
 
 #print(ms)
 way="".join(paths[dest]+[dest])
-#print(way)
+print(way)
 
 
-#print(paths)
+print('Минимальный путь:=',paths)
 #print(lengths)
