@@ -1,15 +1,9 @@
 import random
 import pygame
+import pygame_menu
 pygame.mixer.pre_init(44100,-16,1,512)
 import sys
 pygame.init()
-import tkinter as tk
-win=pygame.display.set_mode((700,600))
-
-pygame.mixer.music.load('background_fon.mp3')
-pygame.mixer.music.play(-1)
-pygame.mixer.music.set_volume(0.5)
-
 sound_d=pygame.mixer.Sound('died.wav')
 sound_e=pygame.mixer.Sound('eating.wav')
 
@@ -35,102 +29,90 @@ class SnakeBlock:
         return 0<=self.x<size_block and 0<=self.y<size_block
     def __eq__(self,other):
         return isinstance(other,SnakeBlock) and self.x==other.x and self.y== other.y
-def get_random_empty_block():
-    x=random.randint(0,count_block-1)
-    y=random.randint(0,count_block-1)
-    empty_block=SnakeBlock(x,y)
-    while empty_block in snake_block:
-        empty_block.x=random.randint(0,count_block-1)
-        empty_block.y=random.randint(0,count_block-1)
-    return empty_block
 run=True
+
 
 def draw_block(color_rect,row,column):
     pygame.draw.rect(screen,color_rect,[10+column*size_block+margin*(column+1),20+row*size_block+margin*(row+1),size_block,size_block])
-snake_block=[SnakeBlock(9,8),SnakeBlock(9,9),SnakeBlock(9,10)]
-apple=get_random_empty_block()
-
-d_row=0
-d_col=1
-
-while run:
-    for event in pygame.event.get():
-        if event.type==pygame.QUIT:
-            print('exit')
-            pygame.quit()
-            sys.exit()
-        elif event.type==pygame.KEYDOWN:
-            if event.key==pygame.K_UP and d_col!=0:
-                d_row=-1
-                d_col=0
-            elif event.key==pygame.K_DOWN and d_col!=0:
-                d_row=1
-                d_col=0
-            elif event.key==pygame.K_LEFT and d_row!=0:
-                d_row=0
-                d_col=-1
-            elif event.key==pygame.K_RIGHT and d_row!=0:
-                d_row=0
-                d_col=1
-                
-
-    screen.fill(color_screen)
-    for row in range(count_rect):
-        for column in range(count_rect):
-            draw_block(color_rect,row,column)
+def start_the_game():
+    pygame.mixer.music.load('background_fon.mp3')
+    pygame.mixer.music.play(-1)
+    pygame.mixer.music.set_volume(0.5)
+    def get_random_empty_block():
+        x=random.randint(0,count_block-1)
+        y=random.randint(0,count_block-1)
+        empty_block=SnakeBlock(x,y)
+        while empty_block in snake_block:
+            empty_block.x=random.randint(0,count_block-1)
+            empty_block.y=random.randint(0,count_block-1)
+        return empty_block
+    snake_block=[SnakeBlock(9,8),SnakeBlock(9,9),SnakeBlock(9,10)]
+    apple=get_random_empty_block()
     
-    head=snake_block[-1]
-    
-    if not head.is_inside():
-        
-        
-        sound_d.play()
-        run=False
-        pygame.mixer.music.stop()
-        win = tk.Tk()
-        win.geometry(f"900x700+200+200")
-        win.title('')
-        Label_1=tk.Label(win,text='Вы проиграли',
-                         fg='red',
-                         font=('Arial',18),
-                         pady=200,
-                         )
-        Label_1.pack()
-        win.mainloop()
-        pygame.quit()
-        sys.exit()
-    draw_block(color_eat,apple.x,apple.y)
-    
-    for block in snake_block:
-        
-        draw_block(color_snake,block.x,block.y)
-        
-    if apple==head:
-        snake_block.append(apple)
-        apple=get_random_empty_block()
-        sound_e.play()
+    d_row=0
+    d_col=1
+    while run:
+        for event in pygame.event.get():
+            if event.type==pygame.QUIT:
+                print('exit')
+                pygame.quit()
+                sys.exit()
+            elif event.type==pygame.KEYDOWN:
+                if event.key==pygame.K_UP and d_col!=0:
+                    d_row=-1
+                    d_col=0
+                elif event.key==pygame.K_DOWN and d_col!=0:
+                    d_row=1
+                    d_col=0
+                elif event.key==pygame.K_LEFT and d_row!=0:
+                    d_row=0
+                    d_col=-1
+                elif event.key==pygame.K_RIGHT and d_row!=0:
+                    d_row=0
+                    d_col=1
+                    
 
+        screen.fill(color_screen)
+        for row in range(count_rect):
+            for column in range(count_rect):
+                draw_block(color_rect,row,column)
         
-    new_head=SnakeBlock(head.x+d_row,head.y+d_col)
-    if new_head in snake_block:
-        sound_d.play()
-        run=False
-        pygame.mixer.music.stop()
-        win = tk.Tk()
-        win.geometry(f"900x700+200+200")
-        win.title('')
-        Label_1=tk.Label(win,text='Вы проиграли',
-                         fg='red',
-                         font=('Arial',18),
-                         pady=200,
-                         )
-        Label_1.pack()
-        win.mainloop()
-        pygame.quit()
-        sys.exit()
-    snake_block.append(new_head)
-    snake_block.pop(0)
-    pygame.display.flip()
+        head=snake_block[-1]
+        
+        if not head.is_inside():
+            sound_d.play()
+            pygame.mixer.music.stop()
+            break
+            #pygame.quit()
+            #sys.exit()
+        draw_block(color_eat,apple.x,apple.y)
+        
+        for block in snake_block:
+            
+            draw_block(color_snake,block.x,block.y)
+            
+        if apple==head:
+            snake_block.append(apple)
+            apple=get_random_empty_block()
+            sound_e.play()
 
-    timer.tick(5)
+            
+        new_head=SnakeBlock(head.x+d_row,head.y+d_col)
+        if new_head in snake_block:
+            sound_d.play()
+            pygame.mixer.music.stop()
+            break
+            #pygame.quit()
+            #sys.exit()
+        snake_block.append(new_head)
+        snake_block.pop(0)
+        pygame.display.flip()
+
+        timer.tick(5)
+menu = pygame_menu.Menu('Snake', 400, 300,
+                       theme=pygame_menu.themes.THEME_BLUE)
+
+menu.add.button('Играть', start_the_game)
+menu.add.button('Выход', pygame_menu.events.EXIT)
+menu.mainloop(screen)
     
