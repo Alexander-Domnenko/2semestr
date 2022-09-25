@@ -28,7 +28,6 @@ Uranus=Planet('Uranus','img/Uranus.png',width/2-19,height/2-310,310)
 Neptune=Planet('Neptune','img/Neptune.png',width/2-15.5,height/2-360,360)
 List_planet=[Mercury,Venus,Earth,Mars,Jupiter,Saturn,Uranus,Neptune]
 pygame.init()
-pygame.mixer.init()
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 running = True
