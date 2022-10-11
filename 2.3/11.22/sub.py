@@ -12,4 +12,4 @@ class MyList(list):
 
 
 a = MyList([1, 2, 3])
-print([2, 3]-a)
+print(a-[2,3])
